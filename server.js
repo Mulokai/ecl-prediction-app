@@ -10,7 +10,7 @@ app.use(express.json());
 
 // ---- CONFIG ----
 // Set your API key here or via environment variable
-const API_KEY = process.env.TOPDECK_API_KEY || "YOUR_API_KEY_HERE";
+const API_KEY = process.env.TOPDECK_API_KEY || "58b30368-7c26-4ac8-bf80-af1026f8ad29";
 
 // ---- Utility: Calculate point changes ----
 function calculateOutcomes(players, username) {
