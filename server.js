@@ -28,7 +28,7 @@ function calculateOutcomes(players, username) {
 
 // ---- Fetch Tournament Wrapper ----
 async function fetchTournament(id) {
-  return fetch(`https://api.topdeck.gg/v2/tournaments/${id}` , {
+  return fetch(`https://api.topdeck.gg/v2/tournaments/Vj6FWrItL4z50jpYo7tH` , {
     headers: { "X-Api-Key": API_KEY }
   }).then(r => r.json());
 }
