@@ -92,6 +92,22 @@ app.post('/api/calc', async (req, res) => {
   }
 });
 
+// ---- Simulation Endpoint ----
+app.post('/api/simulate', (req, res) => {
+  const { players } = req.body; // [{ username, points }, ...]
+  if (!players || players.length !== 4)
+    return res.json({ error: 'You must provide exactly 4 players.' });
+
+  const results = {};
+
+  for (const p of players) {
+    const outcomes = calculateOutcomes(players, p.username);
+    results[p.username] = outcomes;
+  }
+
+  res.json({ players, results });
+});
+
 // ---- Frontend ----
 app.get('/', (req, res) => {
   res.send(`<!DOCTYPE html>
@@ -155,3 +171,4 @@ app.get('/', (req, res) => {
 });
 
 app.listen(3000, () => console.log('Running on http://localhost:3000'));
+
