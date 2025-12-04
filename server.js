@@ -10,7 +10,7 @@ app.use(express.json());
 
 // ---- CONFIG ----
 // Set your API key here or via environment variable
-const API_KEY = process.env.TOPDECK_API_KEY || "58b30368-7c26-4ac8-bf80-af1026f8ad29";
+const API_KEY = process.env.TOPDECK_API_KEY || "YOUR_API_KEY_HERE";
 
 // ---- Utility: Calculate point changes ----
 function calculateOutcomes(players, username) {
@@ -126,12 +126,9 @@ app.get('/', (req, res) => {
       clearTimeout(timer);
       timer = setTimeout(async () => {
         const q = search.value;
-        if (!q) return suggestions.innerHTML = '';
-
-        const res = await fetch('/api/players?q=' + encodeURIComponent(q));
-        const list = await res.json();
-
-        suggestions.innerHTML = list.map(p => `<li>${p.username}</li>`).join('');
+        if (!q) return suggestions.innerHTML = list
+          .map(p => '<li>' + p.username + '</li>')
+          .join('')('');
       }, 300);
     });
 
