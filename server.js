@@ -10,23 +10,27 @@ const API_KEY = process.env.TOPDECK_API_KEY || "58b30368-7c26-4ac8-bf80-af1026f8
 
 // ---- Utility: Calculate point changes ----
 function calculateOutcomes(players, username) {
-  const stakes = players.map((p) => p.points * 0.07);
-  const totalPool = stakes.reduce((a, b) => a + b, 0);
-  const youIndex = players.findIndex((p) => p.username === username);
-  const yourStake = stakes[youIndex];
+console.log('Calculating outcomes for:', username);
+console.log('Players:', players);
+const stakes = players.map((p) => p.points * 0.07);
+console.log('Stakes:', stakes);
+const totalPool = stakes.reduce((a, b) => a + b, 0);
+const youIndex = players.findIndex((p) => p.username === username);
+const yourStake = stakes[youIndex];
+console.log('Your stake:', yourStake, 'Total pool:', totalPool);
 
-  return {
-    win: totalPool - yourStake,
-    loss: -yourStake,
-    draw: totalPool / 4 - yourStake,
-  };
+
+return {
+win: totalPool - yourStake,
+loss: -yourStake,
+draw: totalPool / 4 - yourStake,
+};
 }
 
 // ---- Fetch Tournament ----
 async function fetchTournament(id) {
-  return fetch(`https://api.topdeck.gg/v2/tournaments/${id}`, {
-    headers: { "X-Api-Key": API_KEY }
-  }).then(r => r.json());
+console.log('Fetching tournament:', id);
+return fetch(`https://api.topdeck.gg/v2/tournaments/${id}`, { headers: { "X-Api-Key": API_KEY } }).then(r => r.json());
 }
 
 // ---- Autocomplete Player Search ----
@@ -88,11 +92,15 @@ app.post('/api/simulate', async (req, res) => {
 
   try {
     const data = await fetchTournament(tournamentId);
+    console.log('Tournament data fetched:', data);
+
     const allPlayers = [];
     data.rounds?.forEach(r => r.pods?.forEach(pod => pod.players.forEach(p => allPlayers.push({ username: p.username, points: p.points }))));
+    console.log('All players extracted:', allPlayers);
 
     const selectedPlayers = usernames.map(u => {
       const player = allPlayers.find(p => p.username === u);
+      console.log('Selected player lookup:', u, 'Found:', player);
       if (!player) throw new Error(`Player ${u} not found in tournament`);
       return player;
     });
@@ -101,6 +109,8 @@ app.post('/api/simulate', async (req, res) => {
     selectedPlayers.forEach(p => {
       results[p.username] = calculateOutcomes(selectedPlayers, p.username);
     });
+
+    console.log('Simulation results:', results);
 
     res.json({ pod: selectedPlayers, results });
   } catch (err) {
